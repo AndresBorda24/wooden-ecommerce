@@ -12,4 +12,14 @@ class WoodType extends Model
     protected $fillable = [
         'name',
     ];
+
+    // --- Relationships --- //
+
+    /**
+     * Obtiene los productos relacionados a este _WoodType_
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

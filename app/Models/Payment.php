@@ -17,4 +17,14 @@ class Payment extends Model
         'document',
         'user_id',
     ];
+
+    // --- Relationships --- //
+
+    /**
+     * Obtiene el usuario al que pertenece
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

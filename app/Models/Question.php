@@ -15,4 +15,22 @@ class Question extends Model
         'user_id',
         'product_id',
     ];
+
+    // --- Relationships --- //
+
+    /**
+     * Obtiene el usuario al que pertenece
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Obtiene el producto relacionado
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

@@ -59,4 +59,54 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    // --- Relationships --- //
+
+    /**
+     * Obtiene el role del usuario
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Devuelve las direcciones asociadas al usuario
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+    
+    /**
+     * Regresa los pedidos del usuario
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Regresa _las tarjetas_ del usuario
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Obtiene las 'questions' del usuario
+     */
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    /**
+     * Obtiene los 'rates' hechos por el usuario
+     */
+    public function rates()
+    {
+        return $this->hasMany(Rate::class);
+    }
 }

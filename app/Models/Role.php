@@ -12,4 +12,14 @@ class Role extends Model
     protected $fillable = [
         'name'
     ];
+
+    // --- Relationships --- //
+
+    /**
+     * Obtiene los usuarios que poseen el role
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
