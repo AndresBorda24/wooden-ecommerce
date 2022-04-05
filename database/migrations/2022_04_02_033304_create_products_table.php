@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description');
             $table->integer('price', false, true);
             $table->smallInteger('stock', false, true);
             $table->foreignId('wood_type_id')

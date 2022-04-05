@@ -14,7 +14,9 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'body' => $this->faker->text(100) . '?',
+            'user_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'product_id' => \App\Models\Product::inRandomOrder()->first()->id,
         ];
     }
 }
