@@ -60,6 +60,13 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+
+    public function getIsAdminAttribute()
+    {
+        return $this->role_id === \App\Models\Role::ADMIN;
+    }
+
+
     // --- Relationships --- //
 
     /**

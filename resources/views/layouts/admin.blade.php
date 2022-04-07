@@ -5,13 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/all.min.css') }}">
         <style>
             /* -----
             SVG Icons - svgicons.sparkk.fr
@@ -72,12 +73,24 @@
                         <label for="my-drawer-2" class="drawer-overlay"></label>
                         <ul class="menu p-4 overflow-y-auto w-72 bg-base-100 text-base-content">
                             <!-- Sidebar content here -->
-                            <div class="p-4 border-b-2 border-slate-700">
-                                <h1 class="text-xl mb-2">Woody E-commerce</h1>
-                                <p class="italic text-xs">Panel de Administración</p>
-                            </div> 
-                            <li><a>Sidebar Item 1</a></li>
-                            <li><a>Sidebar Item 2</a></li>
+                            <div class="flex flex-col justify-between h-screen">
+                                <div class="flex-1">
+                                    <div class="p-4 border-b-2 mb-2 border-slate-700">
+                                        <h1 class="text-xl mb-2"><a href="{{ route('dashboard') }}">Woody E-commerce</a></h1>
+                                        <p class="italic text-xs">Panel de Administración</p>
+                                    </div> 
+                                    <li><a href="{{ route('admin.dashboard') }}" 
+                                        class="{{ request()->routeIs('admin.dashboard') ? 'active' : ''}}">Dashboard</a></li>
+        
+                                    <li><a href="{{ route('admin.products') }}" 
+                                        class="{{ request()->routeIs('admin.products') ? 'active' : ''}}">Productos</a></li>
+                                    <li><a>Sidebar Item 2</a></li>
+                                </div>
+                                <div class="p-4 border-b-2 mb-2 border-slate-700">
+                                    <h1 class="text-xl mb-2">Woody E-commerce</h1>
+                                    <p class="italic text-xs">Panel de Administración</p>
+                                </div> 
+                            </div>
                         </ul>
                     </div>
                 </div> 

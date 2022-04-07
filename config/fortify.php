@@ -61,7 +61,13 @@ return [
     |
     */
 
-    'home' => RouteServiceProvider::HOME,
+    // 'home' => RouteServiceProvider::HOME,
+    'home' => function () {
+        if (auth()->user()->isAdmin) {
+            return RouteServiceProvider::ADMINHOME;
+        }
+        return RouteServiceProvider::HOME;
+    },
 
     /*
     |--------------------------------------------------------------------------

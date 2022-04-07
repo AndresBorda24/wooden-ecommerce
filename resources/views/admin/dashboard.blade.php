@@ -1,38 +1,15 @@
 <x-admin-layout>
-    <div class="overflow-x-auto shadow-lg">
-        <table class="table w-full">
-          <!-- head -->
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- row 1 -->
-            <tr>
-              <th>1</th>
-              <td class="text-xs">Cy Ganderton</td>
-              <td class="text-xs">Quality Control Specialist</td>
-              <td class="text-xs">Blue</td>
-            </tr>
-            <!-- row 2 -->
-            <tr>
-              <th>2</th>
-              <td class="text-xs">Hart Hagerty</td>
-              <td class="text-xs">Desktop Support Technician</td>
-              <td class="text-xs">Purple</td>
-            </tr>
-            <!-- row 3 -->
-            <tr>
-              <th>3</th>
-              <td class="text-xs">Brice Swyre</td>
-              <td class="text-xs">Tax Accountant</td>
-              <td class="text-xs">Red</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="max-w-2xl p-4 bg-base-100 mx-auto sm:rounded sm:shadow-lg">
+        <h2 class="text-xl">Ir a:</h2>
+        <div class="divider"></div> 
+        <div class="flex flex-col gap-3 mt-4 justify-center">
+            <a href="{{ route('admin.products') }}" class="block">
+                <div 
+                    class="w-full p-4 text-gray-900 duration-300 rounded shadow-lg transition-all md:py-8 brightness-75 bg-cover bg-center bg-[url(https://api.lorem.space/image/furniture?w=500&h=200)] hover:brightness-90">
+
+                    Productos
+                </div>
+            </a>
+        </div>
     </div>
 </x-admin-layout>
