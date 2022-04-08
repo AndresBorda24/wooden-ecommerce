@@ -86,9 +86,15 @@
                                         class="{{ request()->routeIs('admin.products') ? 'active' : ''}}">Productos</a></li>
                                     <li><a>Sidebar Item 2</a></li>
                                 </div>
-                                <div class="p-4 border-b-2 mb-2 border-slate-700">
-                                    <h1 class="text-xl mb-2">Woody E-commerce</h1>
-                                    <p class="italic text-xs">Panel de Administración</p>
+                                <div class="text-sm pt-3 border-t-2 border-slate-700">
+                                    <form method="POST" action="{{ route('logout') }}" x-data>
+                                        @csrf
+        
+                                        <li><a href="{{ route('logout') }}"
+                                                 @click.prevent="$root.submit();">
+                                            {{ __('Log Out') }}
+                                        </a></li>
+                                    </form>
                                 </div> 
                             </div>
                         </ul>

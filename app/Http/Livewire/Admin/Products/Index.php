@@ -15,30 +15,34 @@ class Index extends Component
 
     public $maderas;
     public $categories;
-    public $editProduct;
+    public $product_id;
+    public $focusedProduct;
+    public $method = 'Actualizar';
 
-    public $dir         = 'asc';
-    public $search      = '';
-    public $perPage     = 10;
-    public $openEdit    = false;
-    public $orderBy     = 'name';
-
-    protected function rules()
-    {
-        return [
-            'editProduct.name'          => ['required',],
-            'editProduct.price'         => ['required',],
-            'editProduct.stock'         => ['required',],
-            'editProduct.description'   => ['required',],
-            'editProduct.category_id'   => ['required',],
-            'editProduct.wood_type_id'  => ['required',],
-        ];
-    }
+    public $dir             = 'asc';
+    public $search          = '';
+    public $perPage         = 10;
+    public $orderBy         = 'name';
+    public $openEdit        = false;
+    public $openDelete      = false;
 
     public function mount()
     {
         $this->categories = \App\Models\Category::pluck('name', 'id');
         $this->maderas    = \App\Models\WoodType::pluck('name', 'id');
+    }
+
+    public function rules()
+    {
+        return [
+            'focusedProduct.name'          => ['required',],
+            'focusedProduct.slug'          => ['required', Rule::unique('products', 'slug')->ignore($this->focusedProduct)],
+            'focusedProduct.price'         => ['required', 'numeric', 'min:100'],
+            'focusedProduct.stock'         => ['required', 'numeric', 'min:0'],
+            'focusedProduct.description'   => ['required',],
+            'focusedProduct.category_id'   => ['required', 'exists:categories,id'],
+            'focusedProduct.wood_type_id'  => ['required', 'exists:wood_types,id'],
+        ];
     }
 
     public function render()
@@ -70,35 +74,48 @@ class Index extends Component
         }
     }
 
-    public function editModal($product)
+    public function createModal()
     {
-        $this->editProduct = [
-            'id'            => $product['id'],
-            'name'          => $product['name'],
-            'price'         => $product['price'],
-            'stock'         => $product['stock'],
-            'description'   => $product['description'],
-            'category_id'   => $product['category_id'],
-            'wood_type_id'  => $product['wood_type_id'],
-        ];
-
+        $this->focusedProduct = new Product();
+        $this->method = 'Crear';
         $this->openEdit = true;
+    }
+
+    public function editModal($product_id)
+    {
+        $this->getFocusProduct($product_id);
+        $this->openEdit = true;
+    }
+
+    public function deleteModal($product_id)
+    {
+        $this->getFocusProduct($product_id);
+        $this->openDelete = true;
     }
 
     public function updateProduct()
     {
-        $this->editProduct['slug'] = Str::slug($this->editProduct['name']);
-        $validateData = Validator::make($this->editProduct, [
-            'name'          => ['required',],
-            'slug'          => ['required', Rule::unique('products', 'slug')->ignore($this->editProduct['id'])],
-            'price'         => ['required', 'numeric'],
-            'stock'         => ['required', 'numeric', 'min:0'],
-            'description'   => ['required',],
-            'category_id'   => ['required', 'exists:categories,id'],
-            'wood_type_id'  => ['required', 'exists:wood_types,id'],
-        ], ['slug.unique' => 'Por favor cambia el titulo'])->validate();
+        $this->focusedProduct->slug = Str::slug($this->focusedProduct->name);
+        $this->validate();
+        $this->focusedProduct->save();
+        $this->resetData();
+    }
 
-        Product::find($this->editProduct['id'])->update($validateData);
-        $this->openEdit = false;
+    public function deleteProduct()
+    {
+        $this->focusedProduct->delete();
+        $this->reset('search');
+        $this->resetData();
+    }
+
+    public function getFocusProduct($product_id)
+    {
+        $this->focusedProduct = Product::findOrFail($product_id);
+    }
+
+    public function resetData()
+    {
+        $this->reset(['openEdit', 'openDelete', 'focusedProduct', 'method']);
+        $this->resetValidation();
     }
 }

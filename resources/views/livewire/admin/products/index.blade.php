@@ -25,7 +25,7 @@
             <label class="label">
               <span class="label-text">Crear producto:</span>
             </label>
-            <button class="btn btn-outline btn-info mr-2 w-full">
+            <button class="btn btn-outline btn-info mr-2 w-full" wire:click="createModal">
                 Crear
             </button>
         </div>
@@ -37,7 +37,7 @@
             {{ $products->links() }}
         </div>
         <div class="overflow-x-auto">
-            <table class="table table-compact w-full" style="table-layout: auto !important;">
+            <table class="table table-compact w-full mb-20" style="table-layout: auto !important;">
                 <thead>
                     <tr class="cursor-pointer">
                         <th></th> 
@@ -70,14 +70,14 @@
                                     <div 
                                         x-show="openOptions" 
                                         x-cloak
-                                        class="absolute -top-2"
+                                        class="absolute -top-2 z-50"
                                         @click.away="openOptions = false"
                                         style="display: none !important; left: -8.3rem;">
 
                                         <ul class="menu bg-base-100 w-32 rounded-box shadow-lg text-gray-50" data-theme="dark">
-                                            <li @clic="openOptions = false"><button wire:click="editModal({{$product}})">Editar</button></li>
+                                            <li @clic="openOptions = false"><button wire:click="editModal({{$product->id}})">Editar</button></li>
                                             <li><button>Galeria</button></li>
-                                            <li><a class="bg-red-500 hover:bg-red-600">Eliminar</a></li>
+                                            <li><button wire:click="deleteModal({{$product->id}})" class="bg-red-500 hover:bg-red-600">Eliminar</button></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -100,11 +100,12 @@
 
 
 
+    {{------------------------ MODALES ---------------------------}}
 
     {{-- Modal de Edición --}}
     <x-jet-dialog-modal wire:model="openEdit">
         <x-slot name="title">
-            <h2 class="text-gray-800 text-xl">Editar Producto</h2>
+            <h2 class="text-gray-800 text-xl">{{ $method }} Producto</h2>
         </x-slot>
 
         <x-slot name="content">
@@ -114,26 +115,26 @@
                 @endforeach
             </div>
             <x-jet-label for="name" value="Nombre" />
-            <input type="text" wire:model.defer="editProduct.name" placeholder="Type here" class="input input-bordered w-full">
+            <input type="text" wire:model.defer="focusedProduct.name" placeholder="Type here" class="input input-bordered w-full">
 
             <div class="grid grid-cols-2 gap-4 my-2">
                 <div>
                     <x-jet-label for="stock" value="Stock" />
-                    <input type="number" wire:model="editProduct.stock" placeholder="Stock" class="input input-bordered w-full max-w-xs">
+                    <input type="number" wire:model="focusedProduct.stock" placeholder="Stock" class="input input-bordered w-full max-w-xs">
                 </div>
                 <div>
                     <x-jet-label for="price" value="Precio" />
-                    <input type="number" wire:model.defer="editProduct.price" placeholder="Precio" class="input input-bordered w-full max-w-xs">
+                    <input type="number" wire:model.defer="focusedProduct.price" placeholder="Precio" class="input input-bordered w-full max-w-xs">
                 </div>
             </div>
 
             <x-jet-label for="description" value="Descripcion"  />
-            <textarea class="textarea textarea-bordered w-full" wire:model.defer="editProduct.description" placeholder="Bio"></textarea>
+            <textarea class="textarea textarea-bordered w-full" wire:model.defer="focusedProduct.description" placeholder="Bio"></textarea>
 
             <div class="grid grid-cols-2 gap-4 my-2">
                 <div>
                     <x-jet-label for="category_id" value="Categoria" />
-                    <select class="select select-bordered w-full max-w-xs" wire:model.defer="editProduct.category_id">
+                    <select class="select select-bordered w-full max-w-xs" wire:model.defer="focusedProduct.category_id">
                         <option disabled selected>Categoria</option>
                         @foreach ($categories as $key => $value)
                             <option value="{{$key}}">{{$value}}</option>
@@ -142,7 +143,7 @@
                 </div>
                 <div>
                     <x-jet-label for="wood_type_id" value="Madera" />
-                    <select class="select select-bordered w-full max-w-xs" wire:model.defer="editProduct.wood_type_id">
+                    <select class="select select-bordered w-full max-w-xs" wire:model.defer="focusedProduct.wood_type_id">
                         <option disabled selected>Madera</option>
                         @foreach ($maderas as $item => $value)
                             <option value="{{$item}}">{{$value}}</option>
@@ -154,11 +155,37 @@
         
         <x-slot name="footer">
             <button class="btn btn-outline btn-success mr-2" wire:click="updateProduct">
-                Edit
+                {{ $method }}
             </button>
-            <button class="btn btn-outline btn-error" wire:click="$set('openEdit', false)">
-                Cerrar
+            <button class="btn btn-outline btn-error" wire:click="resetData()">
+                Cancelar
             </button>
         </x-slot>
     </x-jet-dialog-modal>
+
+    {{-- Modal Eliminacion --}}
+    <x-jet-confirmation-modal wire:model="openDelete">
+        <x-slot name="title">
+            <h2 class="text-red-800 text-xl">Eliminar Producto</h2>
+        </x-slot>
+        <x-slot name="content">
+            <div>
+                <p><b>Estas a punto de eliminar:</b> <span class="italic text-sm"> {{ $focusedProduct->name ?? ''}}</span></p>
+                <ul>
+                    
+                    <li><b>Precio: </b><span class="italic text-sm">{{ number_format($focusedProduct->price ?? 0) }}</span></li>
+                    <li><b>Stock: </b><span class="italic text-sm">{{ $focusedProduct->stock ?? ''}}</span></li>
+                    <li><b>Descripcion: </b><span class="italic text-sm">{{ $focusedProduct->description ?? ''}}</span></li>
+                </ul>
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <button class="mr-2 px-4" wire:click="deleteProduct">
+                ELIMINAR
+            </button>
+            <button class="btn btn-outline btn-error" wire:click="resetData()">
+                Cancelar
+            </button>
+        </x-slot>
+    </x-jet-confirmation-modal>
 </div>
