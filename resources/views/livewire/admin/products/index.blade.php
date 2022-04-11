@@ -40,7 +40,13 @@
             <table class="table table-compact w-full mb-20" style="table-layout: auto !important;">
                 <thead>
                     <tr class="cursor-pointer">
-                        <th></th> 
+                        <th wire:click="order('id')">
+                            
+                            {{-- El componente 'table-header' lo que hace es mostrar los iconos de ordenamiento
+                             por eso necesita las variables --}}
+
+                            <x-table-header :field="['id' => '']" :order="$orderBy" :dir="$dir" />
+                        </th> 
                         <th wire:click="order('name')" class="text-sm">
                             <x-table-header :field="['name' => 'Nombre']" :order="$orderBy" :dir="$dir" />
                         </th> 
@@ -64,7 +70,7 @@
                                 <div class="relative" x-data="{ openOptions: false }">
                                     <button
                                     @click="openOptions = ! openOptions" 
-                                    class="btn btn-success btn-sm w-full focus:ring-4 focus:border-yellow-600 focus:ring-yellow-600 focus:bg-yellow-500">
+                                    class="btn btn-outline btn-success btn-sm w-full focus:ring-4 focus:border-green-600 focus:ring-green-600 focus:bg-green-500 focus:text-green-200">
                                         Acciones
                                     </button>
                                     <div 
@@ -76,7 +82,7 @@
 
                                         <ul class="menu bg-base-100 w-32 rounded-box shadow-lg text-gray-50" data-theme="dark">
                                             <li @clic="openOptions = false"><button wire:click="editModal({{$product->id}})">Editar</button></li>
-                                            <li><button>Galeria</button></li>
+                                            <li><button wire:click="mediaModal({{$product->id}})">Galeria</button></li>
                                             <li><button wire:click="deleteModal({{$product->id}})" class="bg-red-500 hover:bg-red-600">Eliminar</button></li>
                                         </ul>
                                     </div>
@@ -171,8 +177,7 @@
         <x-slot name="content">
             <div>
                 <p><b>Estas a punto de eliminar:</b> <span class="italic text-sm"> {{ $focusedProduct->name ?? ''}}</span></p>
-                <ul>
-                    
+                <ul class="text-sm list-disc list-inside">
                     <li><b>Precio: </b><span class="italic text-sm">{{ number_format($focusedProduct->price ?? 0) }}</span></li>
                     <li><b>Stock: </b><span class="italic text-sm">{{ $focusedProduct->stock ?? ''}}</span></li>
                     <li><b>Descripcion: </b><span class="italic text-sm">{{ $focusedProduct->description ?? ''}}</span></li>
@@ -188,4 +193,141 @@
             </button>
         </x-slot>
     </x-jet-confirmation-modal>
+
+    {{-- Images --}}
+    <x-jet-dialog-modal wire:model="openGallery">
+        <x-slot name="title">
+            <h2 class="text-gray-800 text-xl">Galeria</h2>
+        </x-slot>
+
+        <x-slot name="content">
+            <div x-data="{ openTab: 'index' }">
+                <div class="tabs">
+                    <a 
+                        class="tab tab-lifted" 
+                        x-on:click="()=> { openTab = 'index'; $dispatch('eve', 'index') }" 
+                        x-bind:class="openTab === 'index' ? 'tab-active' : ''"
+                        >Imagenes</a> 
+
+                    <a 
+                        class="tab tab-lifted" 
+                        x-on:click="()=> { openTab = 'create'; $dispatch('eve', 'create') }" 
+                        x-bind:class="openTab === 'create' ? 'tab-active' : ''"
+                        >Subir Imagen</a> 
+                </div>
+                <div class="p-4">
+                    <div x-show="openTab == 'index'">
+                        @if ($this->focusedProduct)
+                            <div class="flex flex-wrap justify-center gap-1 my-2" x-data wire:ignore>
+                                @php
+                                    $proCover = $this->focusedProduct->getFirstMedia('cover');
+                                    $proGallery = $this->focusedProduct->getMedia('gallery');
+                                @endphp
+
+                                {{-- Si el producto tiene portada entonces muestramela --}}
+                                @if (!is_null($proCover)) 
+                                    <div class="indicator" x-ref="image{{ $proCover->id }}">
+                                        <span 
+                                            class="indicator-item badge badge-secondary cursor-pointer" 
+                                            x-on:click="() => {
+                                                $wire.deleteMedia({{$proCover->id}});
+                                                $refs.image{{$proCover->id}}.remove();
+                                            }">
+                                            {{-- wire:click="deleteMedia({{$proCover->id}})"> --}}
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </span> 
+                                        <img 
+                                            class="object-cover h-24 w-24 sm:h-32 sm:w-32 rounded shadow-sm inline-block" 
+                                            src="{{ $proCover->getUrl() }}
+                                        ">
+                                    </div>
+                                @endif
+
+                                {{-- Si el producto tiene alguna foto en gallery entonces muestramela --}}
+                                @if (count($proGallery))
+                                    @foreach ($proGallery as $photo)
+                                        <div class="indicator" x-ref="image{{ $photo->id }}">
+                                            <span 
+                                                class="indicator-item badge badge-secondary cursor-pointer"
+                                                x-on:click="() => {
+                                                    $wire.deleteMedia({{$photo->id}});
+                                                    $refs.image{{$photo->id}}.remove();
+                                                }">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </span> 
+                                            <img 
+                                                class="object-cover h-24 w-24 sm:h-32 sm:w-32 rounded shadow-sm inline-block" 
+                                                src="{{ $photo->getUrl() }}
+                                            ">
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Upload Gallery photos --}}
+                    <div x-show="openTab == 'create'">
+                        <form wire:submit.prevent="saveGallery" id="uploadMedia">
+
+                            <x-jet-label for="cover" value="Portada" />
+                            <input type="file" name="cover" wire:model="cover" accept="image/jpeg,image/png" class="block w-full text-xs text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-sky-50 file:text-sky-700
+                                hover:file:bg-sky-100
+                            "/>
+                            @error('cover')
+                                <p class="text-sm text-red-600">{{ $message }}</p>
+                            @else
+                                @if ($cover)
+                                    <img class="w-24 h-24 sm:w-32 sm:h-32 object-cover mx-auto mt-2 shadow" src="{{ $cover->temporaryUrl() }}">
+                                @endif
+                            @enderror
+
+                            <div class=" divider"></div>
+
+                            <x-jet-label for="gallery" value="Galeria" />
+                            <input type="file" name="gallery" wire:model="gallery" multiple accept="image/jpeg,image/png" class="block w-full text-xs text-slate-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-violet-50 file:text-violet-700
+                                hover:file:bg-violet-100
+                            "/>
+
+                            @error('gallery.*')
+                                <p class="text-sm text-red-600">{{ $message }}</p>
+                            @else
+                                @if ($gallery)
+                                    <div class="flex flex-wrap justify-center gap-1 my-2">
+                                        @foreach ($gallery as $item)
+                                            <img 
+                                                class="object-cover h-24 w-24 sm:h-32 sm:w-32 rounded shadow-sm inline-block" 
+                                                src="{{ $item->temporaryUrl() }}">
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @enderror
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </x-slot>
+        
+        <x-slot name="footer">
+            <div x-data="{ tab: ''}" @eve.window="tab = $event.detail">
+                <div x-show="tab === 'create'" class="inline">
+                    <button type="submit" form="uploadMedia" class="btn btn-outline btn-success mr-2 text-xs sm:text-sm">
+                        Establecer
+                    </button>
+                </div>
+                <button class="btn btn-outline btn-error text-xs sm:text-sm" wire:click="resetData()">
+                    Cancelar
+                </button>
+            </div>
+
+        </x-slot>
+    </x-jet-dialog-modal>
 </div>

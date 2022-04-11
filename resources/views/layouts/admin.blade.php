@@ -48,7 +48,7 @@
             <main>
                 <div class="drawer drawer-mobile" data-theme="dark">
                     <input id="my-drawer-2" type="checkbox" class="drawer-toggle">
-                    <div class="drawer-content" data-theme="bumblebee">
+                    <div class="drawer-content lg:!z-30" data-theme="bumblebee">
     
                         <!-- Page content here -->
                         <div class="bg-gray-100 p-4 lg:p-8 min-h-screen">
@@ -84,7 +84,9 @@
         
                                     <li><a href="{{ route('admin.products') }}" 
                                         class="{{ request()->routeIs('admin.products') ? 'active' : ''}}">Productos</a></li>
-                                    <li><a>Sidebar Item 2</a></li>
+
+                                    <li><a href="{{ route('admin.users') }}" 
+                                        class="{{ request()->routeIs('admin.users') ? 'active' : ''}}">Usuarios</a></li>
                                 </div>
                                 <div class="text-sm pt-3 border-t-2 border-slate-700">
                                     <form method="POST" action="{{ route('logout') }}" x-data>

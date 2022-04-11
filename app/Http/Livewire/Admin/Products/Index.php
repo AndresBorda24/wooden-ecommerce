@@ -2,29 +2,35 @@
 
 namespace App\Http\Livewire\Admin\Products;
 
+use App\Jobs\AttachMediaToProductJob;
 use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Validator;
+use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Index extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $maderas;
     public $categories;
-    public $product_id;
     public $focusedProduct;
-    public $method = 'Actualizar';
+    public $cover;
 
     public $dir             = 'asc';
     public $search          = '';
+    public $gallery         = [];
     public $perPage         = 10;
     public $orderBy         = 'name';
     public $openEdit        = false;
     public $openDelete      = false;
+    public $openGallery     = false;
+    public $method          = 'Actualizar';
 
     public function mount()
     {
@@ -77,8 +83,8 @@ class Index extends Component
     public function createModal()
     {
         $this->focusedProduct = new Product();
-        $this->method = 'Crear';
-        $this->openEdit = true;
+        $this->method         = 'Crear';
+        $this->openEdit       = true;
     }
 
     public function editModal($product_id)
@@ -91,6 +97,13 @@ class Index extends Component
     {
         $this->getFocusProduct($product_id);
         $this->openDelete = true;
+    }
+
+    public function mediaModal($product_id)
+    {
+        $this->getFocusProduct($product_id);
+        $this->focusedProduct->load('media');
+        $this->openGallery = true;
     }
 
     public function updateProduct()
@@ -115,7 +128,43 @@ class Index extends Component
 
     public function resetData()
     {
-        $this->reset(['openEdit', 'openDelete', 'focusedProduct', 'method']);
+        $this->reset(['openEdit', 'openDelete', 'openGallery', 'focusedProduct', 'method', 'cover', 'gallery']);
         $this->resetValidation();
+    }
+
+    public function updatedCover()
+    {
+        $this->validate([
+            'cover' => 'image|max:1024|mimes:jpg,jpeg,png', // 1MB Max
+        ]);
+    }
+
+    public function updatedGallery()
+    {
+        $this->validate([
+            'gallery.*' => 'image|max:1024|mimes:jpg,jpeg,png', // 1MB Max
+        ], ['gallery.*.max' => 'Revisa que todas las imagenes pesen menos de 1mb']);
+    }
+
+
+    public function saveGallery()
+    {
+        if (! is_null($this->cover)) {
+            $this->cover->store('products/cover');
+        }
+
+        if (count($this->gallery) > 0) {
+            foreach ($this->gallery as $image) {
+                $image->store('products/gallery');
+            }
+        }
+        
+        AttachMediaToProductJob::dispatch($this->focusedProduct);
+        $this->resetData();
+    }
+
+    public function deleteMedia($mediaId)
+    {
+        Media::find($mediaId)->delete();
     }
 }
