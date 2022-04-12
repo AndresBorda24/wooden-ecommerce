@@ -7,7 +7,7 @@
 
         <div x-data="{ open: false }">
             <button class="btn btn-link btn-sm w-full" @click="open = !open">Filtros</button>
-            <div x-show="open" class="flex mt-2 gap-2 flex-wrap items-center justify-center p-2 mb-2">
+            <div x-show="open" x-cloak style="display: none !important" class="flex mt-2 gap-2 flex-wrap items-center justify-center p-2 mb-2">
                 {{-- Maderas --}}
                 <div class="flex gap-2">
                     <div>
