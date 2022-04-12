@@ -46,9 +46,9 @@ class Product extends Model implements HasMedia
     /**
      * Obtiene el _wooden_type_ al que pertenece
      */
-    public function woodenType()
+    public function woodType()
     {
-        return $this->belongsTo(woodenType::class);
+        return $this->belongsTo(WoodType::class);
     }
 
     /**

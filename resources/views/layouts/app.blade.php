@@ -56,7 +56,7 @@
                 x-transition:leave-start="opacity-100 scale-100"
                 x-transition:leave-end="opacity-0 scale-0"
                 style="display: none !important;" 
-                class="fixed p-3 z-30 top-0 right-0 bg-slate-900 h-screen w-40 lg:w-64">
+                class="fixed p-3 z-30 top-0 right-0 bg-slate-900 h-screen w-60 lg:w-96">
                 <h3 class="text-xl text-base-100">Tu carrito</h3>
             </div>
 

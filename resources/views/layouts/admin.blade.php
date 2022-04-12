@@ -76,7 +76,7 @@
                             <div class="flex flex-col justify-between h-screen">
                                 <div class="flex-1">
                                     <div class="p-4 border-b-2 mb-2 border-slate-700">
-                                        <h1 class="text-xl mb-2"><a href="{{ route('dashboard') }}">Woody E-commerce</a></h1>
+                                        <h1 class="text-xl mb-2"><a href="{{ route('home') }}">Woody E-commerce</a></h1>
                                         <p class="italic text-xs">Panel de Administración</p>
                                     </div> 
                                     <li><a href="{{ route('admin.dashboard') }}" 

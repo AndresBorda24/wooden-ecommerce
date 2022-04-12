@@ -13,37 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', \App\Http\Controllers\HomeController::class)->name('home');
 
-Route::get('/product/{product}', function ($product) {
-    $media = \App\Models\Product::find($product)->media()->get();
-
-    $gallery = $media->map(function ($m) {
-        return $m->getUrl();
-    });
-
-    $thumbnails = $media->map(function ($m) {
-        return $m->getUrl('thumb');
-    });
-
-    // dd();
-    return view('product', [
-        'gallery'    => json_encode($gallery->toArray()),
-        'thumbnails' => json_encode($thumbnails->toArray()),
-    ]);
-});
+Route::get('/product-search//', [\App\Http\Controllers\Products\ProductController::class, 'search'])->name('products.search');
+Route::get('/product/{product:slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('home');
-    })->name('dashboard');
 
-
-    /**
-     * Admin routes
-     */
+    // Admin Routes
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', function () {
             return view('admin.dashboard');

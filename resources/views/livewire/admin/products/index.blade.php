@@ -36,8 +36,8 @@
         <div class="mb-2">
             {{ $products->links() }}
         </div>
-        <div class="overflow-x-auto">
-            <table class="table table-compact w-full mb-20" style="table-layout: auto !important;">
+        <div class="overflow-x-auto mb-4">
+            <table class="table table-compact w-full" style="table-layout: auto !important;">
                 <thead>
                     <tr class="cursor-pointer">
                         <th wire:click="order('id')">
@@ -76,7 +76,7 @@
                                     <div 
                                         x-show="openOptions" 
                                         x-cloak
-                                        class="absolute -top-2 z-50"
+                                        class="absolute -top-2"
                                         @click.away="openOptions = false"
                                         style="display: none !important; left: -8.3rem;">
 
@@ -93,12 +93,17 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="6">
-                            {{ $products->links() }}
-                        </td> 
+                        <th></th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+        <div class="mt-2">
+            {{ $products->links() }}
         </div>
     @else 
         <p>No hay productos que mostrar</p>
