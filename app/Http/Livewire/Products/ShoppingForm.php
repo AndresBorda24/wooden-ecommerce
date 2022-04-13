@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Products;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Crypt;
 use Livewire\Component;
 
 class ShoppingForm extends Component
@@ -28,6 +29,16 @@ class ShoppingForm extends Component
     {
         $this->validateOnly($propertyName);
     }
+
+    public function shopSingle()
+    {
+        $this->validate();
+
+        $data = $this->amount.'|'.$this->product->price;
+        $dataCrypt = Crypt::encrypt($data);
+
+        return redirect()->route('buy.single', [$this->product, $dataCrypt]);
+    }   
 
     public function render()
     {

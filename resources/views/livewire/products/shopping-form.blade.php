@@ -2,7 +2,7 @@
     <x-jet-input-error for="amount" />
     <div class="flex gap-3 items-center flex-wrap">
         <input type="number" class="input input-bordered w-20" wire:model.lazy="amount">
-        <button class="btn btn-md btn-primary flex-1">
+        <button class="btn btn-md btn-primary flex-1" wire:click="shopSingle()">
             Comprar
         </button>
         <button class="btn btn-outline flex-1">

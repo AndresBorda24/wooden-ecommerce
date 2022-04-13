@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShoppingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,8 @@ Route::get('/product-search//', [\App\Http\Controllers\Products\ProductControlle
 Route::get('/product/{product:slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
-
+    Route::get('single-checkout/{product:slug}/{data}', [ShoppingController::class, 'singleShopping'])->name('buy.single');
+    Route::get('single-checkout/{product:slug}/payment/{data}', [ShoppingController::class, 'paymentSingleProduct'])->name('pay.single');
     // Admin Routes
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', function () {
