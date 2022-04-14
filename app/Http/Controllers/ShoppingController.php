@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -46,5 +47,18 @@ class ShoppingController extends Controller
             'product' => $product,
             'shopData'=> $shopData,
         ]);
+    }
+
+    public function basicCheckout(Request $request, $data)
+    {
+        try {
+            $data =  Crypt::decrypt($data);
+        } catch (\Throwable $th) {
+            abort(403);
+        }
+
+        // Order::findOrFail($data);
+
+        return view('checkout.checkout');
     }
 }

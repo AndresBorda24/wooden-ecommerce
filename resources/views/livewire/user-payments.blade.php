@@ -1,7 +1,7 @@
 <div class="w-full">
     @if ($payments->count())
         <div>
-            <h3 class="font-semibold text-xl">Selecciona tu direccion</h3>
+            <h3 class="font-semibold text-xl">Selecciona tu Tajeta</h3>
             <p class="text-sm">Estas son tus tarjetas asociadas, selecciona una.</p>
 
             <x-jet-input-error for="slPayment" class="mt-2"/>
@@ -20,14 +20,9 @@
             </button>
         </div>
         <div class="divider"></div>
-        <div class="flex justify-end gap-3">
-            @if ($showCheckoutButton)
-                <button class="btn btn-outline btn-primary btn-md block mx-auto" wire:click="checkout">
-                    Finalizar Compra
-                </button>
-            @endif 
-
-            <a href="{{ route('products.show', $product )}}" class="btn btn-error lock mx-auto">
+        <div class="flex justify-center gap-3">
+            @livewire('checkout.checkout')
+            <a href="{{ route('products.show', $productSlug )}}" class="btn btn-error">
                 cancelar
             </a>
         </div>
@@ -40,28 +35,29 @@
 
     {{-- Notificaciones  --}}
     <div 
-        x-data="{ show: false }"
+        x-data="{ show: false, message: '' }"
         x-cloak
         x-show="show"
         x-transition.scale.origin.right
-        x-init="$wire.on('error', () => { show = true; setTimeout(() => { show = false }, 3500) })"
+        x-init="$wire.on('error', $message => { show = true; message = $message; setTimeout(() => { show = false }, 3500) })"
         class="absolute top-14 right-0 rounded bg-red-200 border-l-4 border-red-600 text-slate-700 p-4"
         style="display: none !important;">
-            Ha ocurrido un error, intenta mas tarde.
+            <span x-text="message"></span>
     </div>
 
     <div 
-        x-data="{ show: false }"
+        x-data="{ show: false, message: '' }"
         x-cloak
         x-show="show"
         x-transition.scale.origin.right
-        x-init="$wire.on('nice', () => { show = true; setTimeout(() => { show = false }, 3500) })"
+        x-init="$wire.on('nice', $message => { show = true; message = $message ; setTimeout(() => { show = false }, 3500) })"
         class="absolute top-14 right-0 rounded bg-green-200 border-l-4 border-green-600 text-slate-700 p-4"
         style="display: none !important;">
-            Tarjeta añadida correctamente.
+        <span x-text="message"></span>
     </div>
     {{-- Fin Notificaciones --}}
 
+    {{-- Modal --}}
     <x-jet-dialog-modal wire:model="openAdd">
         @slot('title')
             Añadir direccion

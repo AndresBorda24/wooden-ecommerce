@@ -26,28 +26,6 @@
         </button>
     @endif
 
-    <div 
-        x-data="{ show: false }"
-        x-cloak
-        x-show="show"
-        x-transition.scale.origin.right
-        x-init="$wire.on('error', () => { show = true; setTimeout(() => { show = false }, 2500) })"
-        class="absolute top-14 right-0 rounded bg-red-200 border-l-4 border-red-600 text-slate-700 p-4"
-        style="display: none !important;">
-            Ha ocurrido un error, intenta mas tarde.
-    </div>
-
-    <div 
-        x-data="{ show: false }"
-        x-cloak
-        x-show="show"
-        x-transition.scale.origin.right
-        x-init="$wire.on('nice', () => { show = true; setTimeout(() => { show = false }, 2500) })"
-        class="absolute top-14 right-0 rounded bg-green-200 border-l-4 border-green-600 text-slate-700 p-4"
-        style="display: none !important;">
-            Tarjeta añadida correctamente
-    </div>
-
     <x-jet-dialog-modal wire:model="openAdd">
         @slot('title')
             Añadir direccion

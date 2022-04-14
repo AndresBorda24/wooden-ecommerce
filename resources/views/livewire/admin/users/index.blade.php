@@ -161,4 +161,28 @@
         </button>
     </x-slot>
 </x-jet-dialog-modal>
+
+        {{----------------------- Message  ---------------------------}}
+{{-- Notificaciones  --}}
+<div 
+    x-data="{ show: false, message: '' }"
+    x-cloak
+    x-show="show"
+    x-transition.scale.origin.right
+    x-init="$wire.on('error', $message => { show = true; message = $message; setTimeout(() => { show = false }, 3500) })"
+    class="absolute top-14 right-0 rounded bg-red-200 border-l-4 border-red-600 text-slate-700 p-4"
+    style="display: none !important;">
+        <span x-text="message"></span>
+</div>
+
+<div 
+    x-data="{ show: false, message: '' }"
+    x-cloak
+    x-show="show"
+    x-transition.scale.origin.right
+    x-init="$wire.on('nice', $message => { show = true; message = $message ; setTimeout(() => { show = false }, 3500) })"
+    class="absolute top-14 right-0 rounded bg-green-200 border-l-4 border-green-600 text-slate-700 p-4"
+    style="display: none !important;">
+    <span x-text="message"></span>
+</div>
 </div>

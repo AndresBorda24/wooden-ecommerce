@@ -92,10 +92,15 @@ class Index extends Component
 
     public function changeStatus(int $userId):void 
     {
-        $user = User::findOrfail($userId);
+        try {
+            $user = User::findOrfail($userId);
 
-        $user->update([
-            'status' => ! boolval($user->status)
-        ]);
+            $user->update([
+                'status' => ! boolval($user->status)
+            ]);
+            $this->emit('nice', 'Estado modificado con exito.');
+        } catch (\Exception $e) {
+            $this->emit('error', 'Ha ocurrido un error. Intenta luego.');
+        }
     }
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     @slot('title')
-        'Buscar Producto'
+        Buscar Producto
     @endslot
 
     <div class="py-8">

@@ -3,14 +3,14 @@
 namespace App\Http\Livewire;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class UserPayments extends Component
 {
-    public $product;
+    public $productSlug;
     public $slPayment;
     public $openAdd = false;
-    public $showCheckoutButton = false;
     public $payment = [
         'name' => '',
         'number' => '',
@@ -37,7 +37,7 @@ class UserPayments extends Component
 
     public function mount()
     {
-        $this->product = request()->route('product');
+        $this->productSlug = request()->route('product')->slug;
     }
 
     public function updated($propertyName)
@@ -46,15 +46,14 @@ class UserPayments extends Component
     }
 
     public function updatedSlPayment()
-    {
-        $this->showCheckoutButton = false;
-        
+    {   
+        $this->emit('showCheckout', null);
+
         $this->validate([
             'slPayment' => 'required|numeric|exists:payments,id'
         ], ['slPayment.*' => 'Debes seleccionar una tarjeta valida']);
 
-        $this->showCheckoutButton = true;
-
+        $this->emit('showCheckout', $this->slPayment);
     }
 
     public function addPayment()
@@ -71,17 +70,12 @@ class UserPayments extends Component
                 'document_type'    => $this->payment['doc_type'],
             ]);
             $this->reset('payment', 'openAdd');
-            $this->emit('nice');
+            $this->emit('nice', 'Tajeta añadida con exito!');
 
         } catch (\Throwable $th) {
             $this->openAdd = false;
-            $this->emit('error');
+            $this->emit('error', 'Ha ocurrido un error, intenta más tarde. Lo lamento.');
         }
-    }
-
-    public function checkout()
-    {
-        $this->emit('nice');
     }
 
     public function render()

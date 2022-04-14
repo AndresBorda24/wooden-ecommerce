@@ -41,9 +41,11 @@ class AttachMediaToProductJob implements ShouldQueue
      */
     public function handle()
     {
-        $this->product
-                ->addMedia(Storage::path($this->cover[0]))
+        if (count($this->cover)) {
+            $this->product
+               ->addMedia(Storage::path($this->cover[0]))
                 ->toMediaCollection('cover');
+        }
 
         foreach ($this->gallery as $photo) {
             $this->product

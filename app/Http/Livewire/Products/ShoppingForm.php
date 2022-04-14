@@ -18,10 +18,8 @@ class ShoppingForm extends Component
 
     protected function rules()
     {
-        $max = $this->product->stock > 10 ? 5 : $this->product->stock;
-
         return [
-            'amount' => ['required', 'numeric', 'max:'.$max ,  'min:1']
+            'amount' => ['required', 'numeric', 'max:'.$this->product->stock ,  'min:1']
         ];
     }
 

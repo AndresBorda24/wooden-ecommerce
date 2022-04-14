@@ -108,15 +108,27 @@ class Index extends Component
 
     public function updateProduct()
     {
-        $this->focusedProduct->slug = Str::slug($this->focusedProduct->name);
-        $this->validate();
-        $this->focusedProduct->save();
+        try {
+            $this->focusedProduct->slug = Str::slug($this->focusedProduct->name);
+            $this->validate();
+            $this->focusedProduct->save();
+            $this->emit('nice', 'Actualizacion hecha correctamente.');
+        } catch (\Throwable $th) {
+            $this->emit('error', 'Ha ocurrido un error al actualizar. Intenta Luego.');
+        }
+
         $this->resetData();
     }
 
     public function deleteProduct()
     {
-        $this->focusedProduct->delete();
+        try {
+            $this->focusedProduct->delete();
+            $this->emit('nice', 'Eliminacion Correcta!');
+
+        } catch (\Exception $e) {
+            $this->emit('error', 'Ha ocurrido un error. Intenta Luego.');
+        }
         $this->reset('search');
         $this->resetData();
     }
@@ -149,18 +161,24 @@ class Index extends Component
 
     public function saveGallery()
     {
-        if (! is_null($this->cover)) {
-            $this->cover->store('products/cover');
-        }
-
-        if (count($this->gallery) > 0) {
-            foreach ($this->gallery as $image) {
-                $image->store('products/gallery');
+        try {
+            if (! is_null($this->cover)) {
+                $this->cover->store('products/cover');
             }
+    
+            if (count($this->gallery) > 0) {
+                foreach ($this->gallery as $image) {
+                    $image->store('products/gallery');
+                }
+            }
+            
+            AttachMediaToProductJob::dispatch($this->focusedProduct);
+            $this->resetData();
+
+            $this->emit('nice', 'Galeria actializada con exito!');
+        } catch (\Exception $e) {
+            $this->emit('error', 'Ha ocurrido un error. Intenta Luego!');
         }
-        
-        AttachMediaToProductJob::dispatch($this->focusedProduct);
-        $this->resetData();
     }
 
     public function deleteMedia($mediaId)

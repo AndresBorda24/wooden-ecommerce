@@ -12,6 +12,8 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/all.min.css') }}">
+
         <style>
             /* -----
             SVG Icons - svgicons.sparkk.fr
@@ -42,7 +44,7 @@
     <body class="font-sans antialiased">
         <x-jet-banner />
 
-        <div class="min-h-screen bg-gray-100" x-data="{ showCart: false}">
+        <div class="min-h-screen" style="background-image: url({{ asset('svg/home.svg')}})" x-data="{ showCart: false}">
 
             @livewire('navigation-menu')
             <div 
@@ -61,7 +63,7 @@
             </div>
 
             <!-- Page Content -->
-            <main >
+            <main>
                 {{ $slot }}
             </main>
         </div>

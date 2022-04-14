@@ -9,9 +9,10 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        $products   = Product::orderBy('name', 'asc')->limit(4)->with('media')->get();
+        $products   = Product::orderBy('name', 'asc')->where('stock', '>', 0)->limit(4)->with('media')->get();
         $categories = \App\Models\Category::all();
         $wood       = Product::withCount('orders')
+                        ->where('stock', '>', 0)
                         ->orderby('orders_count', 'desc')
                         ->first();
 

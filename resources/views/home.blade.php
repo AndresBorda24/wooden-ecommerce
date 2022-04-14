@@ -50,7 +50,7 @@
                 <div class="hero-content flex-col lg:flex-row-reverse">
                     @if($woodProduct->getFirstMedia('cover'))
                         <img 
-                            src="{{$product->getFirstMedia('cover')->getUrl()}}" 
+                            src="{{$woodProduct->getFirstMedia('cover')->getUrl()}}" 
                             class="h-96 w-full md:w-3/5 lg:w-80 object-cover object-center shadow-gray-700/60 shadow-md rounded" alt="Shoes" />
                     @else
                         <img 

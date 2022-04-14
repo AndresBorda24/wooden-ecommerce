@@ -20,8 +20,20 @@ Route::get('/product-search//', [\App\Http\Controllers\Products\ProductControlle
 Route::get('/product/{product:slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
-    Route::get('single-checkout/{product:slug}/{data}', [ShoppingController::class, 'singleShopping'])->name('buy.single');
-    Route::get('single-checkout/{product:slug}/payment/{data}', [ShoppingController::class, 'paymentSingleProduct'])->name('pay.single');
+    Route::get('single-checkout/basic/{data}', [ShoppingController::class, 'basicCheckout'])
+            ->name('basic.checkout');
+            
+    Route::get('single-checkout/{product:slug}/{data}', [ShoppingController::class, 'singleShopping'])
+            ->name('buy.single');
+
+    Route::get('single-checkout/{product:slug}/payment/{data}', [ShoppingController::class, 'paymentSingleProduct'])
+            ->name('pay.single');
+
+    // user
+    Route::get('my-orders/', function () {
+        return view('user.orders');
+    })->name('users.orders');
+
     // Admin Routes
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', function () {
