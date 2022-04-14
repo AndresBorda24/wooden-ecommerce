@@ -46,7 +46,7 @@ class Checkout extends Component
             DB::commit();
 
             $data = encrypt($order->id);
-            redirect()->route('basic.checkout', [$data]);
+            redirect()->route('sendEmail.checkout', [$data]);
 
         } catch (\Exception $e) {
             DB::rollBack();

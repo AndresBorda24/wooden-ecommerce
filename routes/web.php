@@ -20,7 +20,10 @@ Route::get('/product-search//', [\App\Http\Controllers\Products\ProductControlle
 Route::get('/product/{product:slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
-    Route::get('single-checkout/basic/{data}', [ShoppingController::class, 'basicCheckout'])
+    Route::get('checkout-process/{data}', [ShoppingController::class, 'sendEmail'])
+            ->name('sendEmail.checkout');
+
+    Route::get('single-checkout/basic/', [ShoppingController::class, 'basicCheckout'])
             ->name('basic.checkout');
             
     Route::get('single-checkout/{product:slug}/{data}', [ShoppingController::class, 'singleShopping'])

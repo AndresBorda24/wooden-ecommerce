@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderShipped;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 
 class ShoppingController extends Controller
 {
@@ -49,7 +51,14 @@ class ShoppingController extends Controller
         ]);
     }
 
-    public function basicCheckout(Request $request, $data)
+    /**
+     * Envia un email con información de la compra al usuario.
+     * 
+     * @param str $data
+     * 
+     * @return void
+     */
+    public function sendEmail($data)
     {
         try {
             $data =  Crypt::decrypt($data);
@@ -57,8 +66,21 @@ class ShoppingController extends Controller
             abort(403);
         }
 
-        // Order::findOrFail($data);
+        $order = Order::findOrFail($data);
 
+        $orderMessage = (new OrderShipped($order))->onQueue('mails');
+        Mail::to(auth()->user())->queue($orderMessage);
+
+        return redirect()->route('basic.checkout');
+    }
+
+    /**
+     * Retorna pagina de agradecimiento por la compra
+     * 
+     * @return view 
+     */
+    public function basicCheckout()
+    {
         return view('checkout.checkout');
     }
 }
