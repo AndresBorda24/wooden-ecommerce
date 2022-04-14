@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Checkout;
 
+use App\Models\Product;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -9,7 +10,7 @@ class Checkout extends Component
 {
     public $data;
     public $product;
-    public $addressId;
+    public $paymentId;
     public $showCheckoutButton = false;
 
     protected $listeners = [
@@ -19,10 +20,14 @@ class Checkout extends Component
     public function mount()
     {
         // product 
+        // $this->product = $product;
         $this->product = request()->route('product');
 
         // product's data
+        // $data = decrypt($data);
+
         $data = decrypt(request()->route('data'));
+
         $this->data = explode('|', $data);
     }
 
@@ -32,7 +37,8 @@ class Checkout extends Component
             DB::beginTransaction();
             $order = \App\Models\Order::create([
                 'user_id'    => auth()->id(),
-                'address_id' => $this->data[2]
+                'address_id' => $this->paymentId,
+                'total_price'=> $this->data[0] * $this->data[1],
             ]);
     
             $order->products()->attach($this->product->id, [
@@ -50,19 +56,19 @@ class Checkout extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            throw $e;
+            // throw $e;
             $this->emit('error', 'No se ha podido completar la compra');
         }
     }
 
-    public function showCheckout($address = null)
+    public function showCheckout($payment = null)
     {
         if ( $this->product->stock - $this->data[0] < 0) {
             $this->emit('NoStock', 'Lo siento, no tenemos las unidades que deseas, vuelve al articulo y revisa el stock.');
         } else {
-            if ($address) {
+            if ($payment) {
+                $this->paymentId = $payment;
                 $this->showCheckoutButton = true;
-                $this->addressId = $address;
             } else {
                 $this->showCheckoutButton = false;
             }

@@ -8,8 +8,9 @@ use Livewire\Component;
 
 class UserPayments extends Component
 {
-    public $productSlug;
+    public $data;
     public $slPayment;
+    public $productSlug;
     public $openAdd = false;
     public $payment = [
         'name' => '',
@@ -18,6 +19,8 @@ class UserPayments extends Component
         'doc_type' => '',
         'document' => '',
     ];
+
+    protected $listeners =['render'];
 
     protected $rules = [
         'payment.name'       => 'required',
@@ -37,7 +40,8 @@ class UserPayments extends Component
 
     public function mount()
     {
-        $this->productSlug = request()->route('product')->slug;
+        $this->productSlug = request()->route('product');
+        $this->data        = request()->route('data');
     }
 
     public function updated($propertyName)
@@ -71,7 +75,6 @@ class UserPayments extends Component
             ]);
             $this->reset('payment', 'openAdd');
             $this->emit('nice', 'Tajeta añadida con exito!');
-
         } catch (\Throwable $th) {
             $this->openAdd = false;
             $this->emit('error', 'Ha ocurrido un error, intenta más tarde. Lo lamento.');

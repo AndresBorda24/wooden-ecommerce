@@ -62,7 +62,7 @@
                     <h1 class="text-5xl font-bold">Madera {{ $woodProduct->woodType->name }}!</h1>
                     <h2 class="font-semibold italic">{{$woodProduct->name}}</h2>
                     <p class="py-6">{{$woodProduct->description}}</p>
-                    <button class="btn btn-primary">Ver nuevos crafts</button>
+                    <a href="{{ route('products.search', ['selected[wood]' => $woodProduct->wood_type_id]) }}" class="btn btn-primary">Ver nuevos crafts</a>
                   </div>
                 </div>
             </div>

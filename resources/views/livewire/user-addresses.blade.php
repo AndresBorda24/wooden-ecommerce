@@ -20,7 +20,7 @@
             </button>
         </div>
     @else
-        No hay direcciones asociadas, registrala ahora!
+        <p class="text-center mb-3">No hay direcciones asociadas, registrala ahora!</p>
         <button class="btn btn-outline btn-success btn-sm block mx-auto" wire:click="$set('openAdd', true)">
             Añadir
         </button>

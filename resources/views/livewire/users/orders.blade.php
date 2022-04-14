@@ -41,8 +41,8 @@
                 @foreach ($data as $order)
                     <tr>
                         <th>{{ $loop->iteration }}</th> 
-                        <td><b>$</b> {{ number_format($order['price']) }}</td> 
-                        <td class="px-5">{{ $order['date']->format('d-F-Y')}}</td>
+                        <td><b>$</b> {{ number_format($order->total_price) }}</td> 
+                        <td class="px-5">{{ $order->created_at->format('d-F-Y')}}</td>
                         <td><button class="btn btn-ghost btn-xs" wire:click="openDetails({{$loop->index}})">Detalle</button></td>
                     </tr>   
                 @endforeach
@@ -57,40 +57,42 @@
         @endslot
         @slot('content')
             <div class="overflow-x-auto">
-                <table class="table table-compact w-full">
-                    <thead>
-                    <tr>
-                        <th></th> 
-                        <th>Nombre</th> 
-                        <th>Cantidad</th> 
-                        <th>Precio</th> 
-                    </tr>
-                    </thead> 
-                    <tbody>
-                        @foreach ($this->data[$n]['products'] as $product)
-                            <tr>
-                                <th>
-                                    @if ($product->getFirstMedia('cover'))
-                                        <img src="{{ $product->getFirstMedia('cover')->getUrl('thumb') }}" class="h-10 w-10 object-cover object-center rounded-full shadow mx-auto" alt="">
-                                    @else
-                                        <img src="https://api.lorem.space/image/furniture?w=100&h=25" class="h-10 w-10 object-cover object-center rounded-full shadow mx-auto" alt="">
-                                    @endif
-                                </th> 
-                                <td><a class="hover:text-orange-300" href="{{ route('products.show', $product)}}" target="_blank">{{ $product->name }}</a></td> 
-                                <td>{{ $product->pivot->quantity }}</td> 
-                                <td><b>$ </b>{{ number_format($product->pivot->price) }}</td> 
-                            </tr>
-                        @endforeach
-                    </tbody> 
-                    <tfoot>
-                    <tr>
-                        <th></th> 
-                        <th></th> 
-                        <th>Total:</th> 
-                        <th><b>$ </b>{{ number_format($this->data[$n]['price']) }}</th> 
-                    </tr>
-                    </tfoot>
-                </table>
+                @if ($data->count())
+                    <table class="table table-compact w-full">
+                        <thead>
+                        <tr>
+                            <th></th> 
+                            <th>Nombre</th> 
+                            <th>Cantidad</th> 
+                            <th>Precio</th> 
+                        </tr>
+                        </thead> 
+                        <tbody>
+                                @foreach ($this->data[$n]->products as $product)
+                                    <tr>
+                                        <th>
+                                            @if ($product->getFirstMedia('cover'))
+                                                <img src="{{ $product->getFirstMedia('cover')->getUrl('thumb') }}" class="h-10 w-10 object-cover object-center rounded-full shadow mx-auto" alt="">
+                                            @else
+                                                <img src="https://api.lorem.space/image/furniture?w=100&h=25" class="h-10 w-10 object-cover object-center rounded-full shadow mx-auto" alt="">
+                                            @endif
+                                        </th> 
+                                        <td><a class="hover:text-orange-300" href="{{ route('products.show', $product)}}" target="_blank">{{ $product->name }}</a></td> 
+                                        <td>{{ $product->pivot->quantity }}</td> 
+                                        <td><b>$ </b>{{ number_format($product->pivot->price) }}</td> 
+                                    </tr>
+                                @endforeach
+                        </tbody> 
+                        <tfoot>
+                        <tr>
+                            <th></th> 
+                            <th></th> 
+                            <th>Total:</th> 
+                            <th><b>$ </b>{{ number_format($this->data[$n]->total_price) }}</th> 
+                        </tr>
+                        </tfoot>
+                    </table>
+                @endif
             </div>        
         @endslot
         @slot('footer')

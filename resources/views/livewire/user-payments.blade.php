@@ -20,18 +20,16 @@
             </button>
         </div>
         <div class="divider"></div>
-        <div class="flex justify-center gap-3">
-            @livewire('checkout.checkout')
-            <a href="{{ route('products.show', $productSlug )}}" class="btn btn-error">
-                cancelar
-            </a>
-        </div>
+        {{-- <div class="flex justify-center gap-3" --}}
     @else
-        No hay tarjetas asociadas, registrala ahora!
-        <button class="btn btn-outline btn-success btn-sm block mx-auto" wire:click="$set('openAdd', true)">
+        <p class="text-center">No hay tarjetas asociadas, registrala ahora!</p>
+        <button class="btn btn-outline btn-success btn-sm block mx-auto my-3" wire:click="$set('openAdd', true)">
             Añadir
         </button>
+        <div class="divider"></div>
     @endif
+
+    @livewire('checkout.checkout')
 
     {{-- Notificaciones  --}}
     <div 

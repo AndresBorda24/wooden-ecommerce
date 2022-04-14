@@ -33,27 +33,28 @@ class Orders extends Component
 
     public function render()
     {
-        $orders = auth()->user()->orders()
+        $this->data = auth()->user()->orders()
                 ->with('products')
                 ->orderBy('created_at', $this->dir)
                 ->whereDate('created_at', '>=',$this->dateFrom . ' 00:00:00')
                 ->whereDate('created_at', '<=',$this->dateTo . ' 24:59:00')
                 ->get();
 
-        $this->data = $orders->map(function ($o) {
-            $price = 0;
-            $products = $o->products;
+        // $this->data = $orders->map(function ($o) {
+        //     $price = 0;
+        //     $products = $o->products;
 
-            foreach ($products as $product) {
-                $price += $product->pivot->quantity * $product->pivot->price; 
-            }
+        //     foreach ($products as $product) {
+        //         $price += $product->pivot->quantity * $product->pivot->price; 
+        //     }
 
-            return [
-                'price'    => $price,
-                'date'     => $o->created_at,
-                'products' => $products,
-            ];
-        });
+        //     return [
+        //         'price'    => $price,
+        //         'date'     => $o->created_at,
+        //         'products' => $products,
+        //     ];
+        // });
+        
 
         return view('livewire.users.orders');
     }

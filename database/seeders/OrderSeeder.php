@@ -14,12 +14,22 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        $orders = Order::all();
 
-        foreach ($orders as $key => $order) {
-            $order->products()->attach( $key + 3, ['quantity' => rand(1, 10), 'price' => rand(10000, 200000)]);
-            $order->products()->attach( $key + 2, ['quantity' => rand(1, 10), 'price' => rand(10000, 200000)]);
-            $order->products()->attach( $key + 4, ['quantity' => rand(1, 10), 'price' => rand(10000, 200000)]);
+        for ($i=0; $i < 10 ; $i++) { 
+            $address = \App\Models\Address::inRandomOrder()->first();
+            $product =\App\Models\Product::where('stock', '>', 0)->inRandomOrder()->limit(1)->first();
+
+            $quantity = rand(1, $product->stock);
+            $price = $product->price;
+
+            \App\Models\Order::create([
+                'user_id'     => $address->user_id,
+                'address_id'  => $address->id,
+                'total_price' => $quantity * $price,
+            ])->products()->attach($product->id, [
+                'quantity' => $quantity,
+                'price'    => $price
+            ]);
         }
     }
 }

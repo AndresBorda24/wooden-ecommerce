@@ -13,7 +13,8 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'address_id'
+        'address_id',
+        'total_price'
     ];
 
     // --- Relationships --- //

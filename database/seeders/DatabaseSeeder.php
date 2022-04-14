@@ -30,12 +30,12 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory(20)->create();
         \App\Models\Category::factory(7)->create();
         \App\Models\WoodType::factory(4)->create();
-        \App\Models\Product::factory(100)->create();
+        \App\Models\Product::factory(30)->create();
         \App\Models\Payment::factory(5)->create();
         \App\Models\Rate::factory(78)->create();
-        \App\Models\Address::factory(14)->create();
+        \App\Models\Address::factory(10)->create();
         \App\Models\Question::factory(20)->create();
-        \App\Models\Order::factory(10)->create();
+        // \App\Models\Order::factory(10)->create();
         $this->call(OrderSeeder::class);
     }
 }
