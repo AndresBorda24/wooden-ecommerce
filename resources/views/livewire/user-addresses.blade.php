@@ -34,15 +34,15 @@
             <div class="p-2">
                 <x-jet-input-error for="address.town" />
                 <x-jet-label value="Ciudad" />
-                <input type="text" wire:model="address.town" placeholder="Ibagué - Tolima" class="input input-bordered w-full mb-3">
+                <input type="text" wire:model.lazy="address.town" placeholder="Ibagué - Tolima" class="input input-bordered w-full mb-3">
 
                 <x-jet-input-error for="address.neighborhood" />
                 <x-jet-label value="Barrio" />
-                <input type="text" wire:model="address.neighborhood" placeholder="San Simón" class="input input-bordered w-full mb-3">
+                <input type="text" wire:model.lazy="address.neighborhood" placeholder="San Simón" class="input input-bordered w-full mb-3">
 
                 <x-jet-input-error for="address.house" />
                 <x-jet-label value="Casa" />
-                <input type="text" wire:model="address.house" placeholder="Mnz 21 Cs 78" class="input input-bordered w-full mb-3">
+                <input type="text" wire:model.lazy="address.house" placeholder="Mnz 21 Cs 78" class="input input-bordered w-full mb-3">
 
             </div>            
         @endslot

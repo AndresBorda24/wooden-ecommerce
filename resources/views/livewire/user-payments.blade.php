@@ -58,7 +58,7 @@
     {{-- Modal --}}
     <x-jet-dialog-modal wire:model="openAdd">
         @slot('title')
-            Añadir direccion
+            Añadir tarjeta
         @endslot
         @slot('content')
             <div class="p-2">

@@ -45,5 +45,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
         Route::get('/productos', \App\Http\Livewire\Admin\Products\Index::class)->name('products');
         Route::get('/usuarios', \App\Http\Livewire\Admin\Users\Index::class)->name('users');
+        Route::get('/ventas', \App\Http\Livewire\Admin\Orders\Index::class)->name('orders');
     });
 });

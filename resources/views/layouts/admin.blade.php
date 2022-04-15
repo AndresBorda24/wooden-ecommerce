@@ -72,6 +72,7 @@
                     <div class="drawer-side">
                         <label for="my-drawer-2" class="drawer-overlay"></label>
                         <ul class="menu p-4 overflow-y-auto w-72 bg-base-100 text-base-content">
+
                             <!-- Sidebar content here -->
                             <div class="flex flex-col justify-between h-screen">
                                 <div class="flex-1">
@@ -87,6 +88,9 @@
 
                                     <li><a href="{{ route('admin.users') }}" 
                                         class="{{ request()->routeIs('admin.users') ? 'active' : ''}}">Usuarios</a></li>
+                                    
+                                    <li><a href="{{ route('admin.orders') }}" 
+                                        class="{{ request()->routeIs('admin.orders') ? 'active' : ''}}">Ventas / Ordenes</a></li>
                                 </div>
                                 <div class="text-sm pt-3 border-t-2 border-slate-700">
                                     <form method="POST" action="{{ route('logout') }}" x-data>
@@ -97,8 +101,9 @@
                                             {{ __('Log Out') }}
                                         </a></li>
                                     </form>
-                                </div> 
+                                </div>  
                             </div>
+
                         </ul>
                     </div>
                 </div> 
@@ -108,5 +113,6 @@
         @stack('modals')
 
         @livewireScripts
+        {{ $scripts ?? ''}}
     </body>
 </html>

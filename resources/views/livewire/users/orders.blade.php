@@ -11,13 +11,17 @@
                 <input type="date" wire:model.defer="dateTo" id="to">
             </div>
         </div>
-        <div class="flex gap-0 bg-sky-300 cursor-pointer rounded hover:shadow-md">
-            <div class="p-3 select-none" wire:click="$refresh">
-                Buscar
-            </div>
-            <div class="p-3 border-l border-sky-400">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
+        <div>
+            <x-jet-label value="Buscar fechas" />
+            <button class="btn btn-outline btn-info" wire:click="$refresh">
+                Buscar 
+                <i class="fa-solid fa-magnifying-glass ml-3"></i>
+            </button>
+        </div>
+        <div x-data="{ message: 'Por Enviar'}">
+            {{-- <x-jet-label value="Por enviar" /> --}}
+            <span class="block font-medium text-sm text-gray-700" x-text="message"></span>
+            <input type="checkbox" @click="message = $event.target.checked ? 'Por Enviar' : 'Enviados';" wire:model="onlyOrders" class="checkbox">
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -38,7 +42,7 @@
                 </tr>
             </thead> 
             <tbody>
-                @foreach ($data as $order)
+                @foreach ($orders as $order)
                     <tr>
                         <th>{{ $loop->iteration }}</th> 
                         <td><b>$</b> {{ number_format($order->total_price) }}</td> 
@@ -57,7 +61,7 @@
         @endslot
         @slot('content')
             <div class="overflow-x-auto">
-                @if ($data->count())
+                @if ($orders->count())
                     <table class="table table-compact w-full">
                         <thead>
                         <tr>
@@ -68,7 +72,7 @@
                         </tr>
                         </thead> 
                         <tbody>
-                                @foreach ($this->data[$n]->products as $product)
+                                @foreach ($orders[$n]->products as $product)
                                     <tr>
                                         <th>
                                             @if ($product->getFirstMedia('cover'))
@@ -88,7 +92,7 @@
                             <th></th> 
                             <th></th> 
                             <th>Total:</th> 
-                            <th><b>$ </b>{{ number_format($this->data[$n]->total_price) }}</th> 
+                            <th><b>$ </b>{{ number_format($orders[$n]->total_price) }}</th> 
                         </tr>
                         </tfoot>
                     </table>

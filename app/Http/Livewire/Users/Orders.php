@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Models\Order;
 use Livewire\Component;
 
 class Orders extends Component
@@ -13,6 +14,7 @@ class Orders extends Component
     public $n = 0;
     public $dir = 'desc';
     public $openShow = false;
+    public $onlyOrders = true;
 
     public function mount()
     {
@@ -33,29 +35,19 @@ class Orders extends Component
 
     public function render()
     {
-        $this->data = auth()->user()->orders()
+        $data = Order::query();
+
+        if (! $this->onlyOrders) {
+            $data->onlyTrashed();
+        }
+
+        $orders = $data->where('user_id', auth()->id())
                 ->with('products')
                 ->orderBy('created_at', $this->dir)
                 ->whereDate('created_at', '>=',$this->dateFrom . ' 00:00:00')
                 ->whereDate('created_at', '<=',$this->dateTo . ' 24:59:00')
-                ->get();
-
-        // $this->data = $orders->map(function ($o) {
-        //     $price = 0;
-        //     $products = $o->products;
-
-        //     foreach ($products as $product) {
-        //         $price += $product->pivot->quantity * $product->pivot->price; 
-        //     }
-
-        //     return [
-        //         'price'    => $price,
-        //         'date'     => $o->created_at,
-        //         'products' => $products,
-        //     ];
-        // });
-        
-
-        return view('livewire.users.orders');
+                ->get();    
+    // dd($data);                
+        return view('livewire.users.orders', compact('orders'));
     }
 }
