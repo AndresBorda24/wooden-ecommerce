@@ -1,7 +1,13 @@
 <x-admin-layout>
-    <div class="max-w-2xl p-4 bg-base-100 mx-auto sm:rounded sm:shadow-lg">
-        <div class=" max-w-4xl">
-            <canvas id="myChart" width="400" height="400"></canvas>
+    {{-- {{ dd($users) }} --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-base-100 p-3 rounded shadow-gray-800/50 shadow-md">
+            <h2 class="text-green-500 font-semibold text-lg mb-4">Productos con mayor valor en ventas (ultimo mes):</h2>
+            <canvas id="myChart" width="300" height="300"></canvas>
+        </div>
+        <div class="bg-base-100 p-3 rounded shadow-gray-800/50 shadow-md">
+            <h2 class="text-green-500 font-semibold text-lg mb-4">Usuarios nuevos:</h2>
+            <canvas id="newUsers" width="300" height="300"></canvas>
         </div>
     </div>
 
@@ -11,27 +17,64 @@
         <script type="text/javascript">
             const ctx = document.getElementById('myChart').getContext('2d');
             const myChart = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: <?php echo json_encode(array_keys($products)) ?> ,
+                    datasets: [{
+                        label: '# de ventas',
+                        data: <?php echo json_encode(array_values($products)) ?>,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            // 'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255, 1)',
+                            // 'rgba(54, 162, 235, 1)',
+                            // 'rgba(255, 206, 86, 1)',
+                            // 'rgba(75, 192, 192, 1)',
+                            // 'rgba(153, 102, 255, 1)',
+                            // 'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Users--------------------------------------------------
+            const ctx2 = document.getElementById('newUsers').getContext('2d');
+            const newUsers = new Chart(ctx2, {
                 type: 'bar',
                 data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    labels: <?php echo json_encode(array_keys($users)) ?> ,
                     datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
+                        label: '# de nuevos usuarios',
+                        data: <?php echo json_encode(array_values($users)) ?>,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            // 'rgba(153, 102, 255, 0.5)',
+                            // 'rgba(255, 159, 64, 0.2)'
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(54, 162, 235, 1)',
                             'rgba(255, 206, 86, 1)',
                             'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
+                            // 'rgba(153, 102, 255, 1)',
+                            // 'rgba(255, 159, 64, 1)'
                         ],
                         borderWidth: 1
                     }]
