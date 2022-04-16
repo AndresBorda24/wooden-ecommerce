@@ -35,7 +35,7 @@ class Orders extends Component
 
     public function render()
     {
-        $data = Order::query();
+        $data = Order::query()->whereHas('products');
 
         if (! $this->onlyOrders) {
             $data->onlyTrashed();

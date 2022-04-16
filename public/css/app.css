@@ -3774,6 +3774,9 @@ body[dir="rtl"] .checkbox:checked,
 .w-11\/12 {
   width: 91.666667%;
 }
+.w-96 {
+  width: 24rem;
+}
 .min-w-0 {
   min-width: 0px;
 }
@@ -5151,6 +5154,10 @@ body[dir="rtl"] .checkbox:checked,
 
   .sm\:grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sm\:items-start {

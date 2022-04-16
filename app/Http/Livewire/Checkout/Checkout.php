@@ -19,18 +19,16 @@ class Checkout extends Component
 
     public function mount()
     {
-        // product 
-        // $this->product = $product;
         $this->product = request()->route('product');
-
-        // product's data
-        // $data = decrypt($data);
 
         $data = decrypt(request()->route('data'));
 
         $this->data = explode('|', $data);
     }
 
+    /**
+     * Crea el registro de la compra en la base de datos.
+     */
     public function checkout()
     {
         try {

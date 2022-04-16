@@ -22,6 +22,12 @@ class CreateOrder extends Component
         $this->amount  = $amount;
     }
     
+    /**
+     * Toma el id de la direccion seleccionada
+     * la variable es pasada por un evento de livewire
+     * 
+     * @param int addressId
+     */
     public function getAddresId($addressId = null)
     {
         if ($addressId) {
@@ -33,6 +39,8 @@ class CreateOrder extends Component
         }
     }
 
+    // Empieza el proceso de compra 
+    // Vista: 'Checkout.single-product'
     public function newOrder()
     {
         $data =  $this->amount . '|' . $this->price . '|' . $this->address;

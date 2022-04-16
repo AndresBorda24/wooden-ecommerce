@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Mail;
 
 class ShoppingController extends Controller
 {
+    /**
+     * Retorna la página de seleccion de direccion (domicilio).
+     * 
+     * @param Product $product
+     * @param str $data
+     * 
+     * @return view 
+     */
     public function singleShopping(Product $product, $data)
     {
         try {
@@ -30,6 +38,14 @@ class ShoppingController extends Controller
         ]);
     }
 
+    /**
+     * Retorna la página de seleccion de tarjeta.
+     * 
+     * @param Product $product
+     * @param str $data
+     * 
+     * @return view 
+     */
     public function paymentSingleProduct(Product $product, $data)
     {
         try {

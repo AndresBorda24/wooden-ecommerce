@@ -20,6 +20,7 @@ Route::get('/product-search//', [\App\Http\Controllers\Products\ProductControlle
 Route::get('/product/{product:slug}', [\App\Http\Controllers\Products\ProductController::class, 'show'])->name('products.show');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
+    // Proceso de compra  
     Route::get('checkout-process/{data}', [ShoppingController::class, 'sendEmail'])
             ->name('sendEmail.checkout');
 
@@ -39,9 +40,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
     // Admin Routes
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/productos', \App\Http\Livewire\Admin\Products\Index::class)->name('products');
         Route::get('/usuarios', \App\Http\Livewire\Admin\Users\Index::class)->name('users');

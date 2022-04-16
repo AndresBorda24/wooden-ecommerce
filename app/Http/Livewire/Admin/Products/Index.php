@@ -80,6 +80,7 @@ class Index extends Component
         }
     }
 
+// ------------ Preparacion de los modales -----------
     public function createModal()
     {
         $this->focusedProduct = new Product();
@@ -105,9 +106,11 @@ class Index extends Component
         $this->focusedProduct->load('media');
         $this->openGallery = true;
     }
+// --------------------------------------------------
 
     public function updateProduct()
     {
+        $this->validate();
         try {
             $this->focusedProduct->slug = Str::slug($this->focusedProduct->name);
             $this->validate();

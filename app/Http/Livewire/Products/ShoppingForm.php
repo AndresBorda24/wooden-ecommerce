@@ -28,6 +28,10 @@ class ShoppingForm extends Component
         $this->validateOnly($propertyName);
     }
 
+    /**
+     * Encripta los datos de la compra y redirige a la seleccion de 
+     * direccion.
+     */
     public function shopSingle()
     {
         $this->validate();

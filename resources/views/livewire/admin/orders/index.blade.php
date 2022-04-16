@@ -3,12 +3,12 @@
         <div>
             <div class="inline-block">
                 <x-jet-label value="From" />
-                <input type="date" max="{{ now()->subDay()->toDateString() }}" id="from">
+                <input type="date" max="{{ now()->subDay()->toDateString() }}" id="from" wire:model.defer="dateFrom">
             </div>
 
             <div class="inline-block">
                 <x-jet-label value="To" />
-                <input type="date" id="to">
+                <input type="date" id="to" wire:model.defer="dateTo">
             </div>
         </div>
         <div>
@@ -93,7 +93,7 @@
                         <div class="form-control max-w-min">
                             <label class="label cursor-pointer">
                                 <span class="label-text whitespace-nowrap mr-3 text-lg font-semibold">Marcar como enviado</span> 
-                                <input type="checkbox" class="checkbox" @if ($orders[$n]->trashed()) checked="checked" @endif wire:click.debounce.1500ms="sentOrder({{ $orders[$n]->id }})">
+                                <input type="checkbox" class="checkbox" @if ($orders[$n]->trashed()) checked="checked" @endif wire:click="sentOrder({{ $orders[$n]->id }})">
                             </label>
                         </div>
                     </div>

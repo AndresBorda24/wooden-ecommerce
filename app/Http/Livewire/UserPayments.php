@@ -22,14 +22,6 @@ class UserPayments extends Component
 
     protected $listeners =['render'];
 
-    protected $rules = [
-        'payment.name'       => 'required',
-        'payment.number'     => 'required|max:15|min:12|unique:payments,number|regex:/^[0-9]*$/i',
-        'payment.expiration' => 'required|date',
-        'payment.doc_type'   => 'required|in:C.C,C.E,PASSPORT',
-        'payment.document'   => 'required|max:15|min:8|regex:/^[0-9]*$/',
-    ];
-
     protected $validationAttributes = [
         'payment.name'       => 'Name',
         'payment.number'     => 'Number',
@@ -38,17 +30,35 @@ class UserPayments extends Component
         'payment.document'   => 'Identification',
     ];
 
+    protected function rules()
+    {
+        return [
+            'payment.name'       => 'required',
+            'payment.number'     => 'required|max:12|min:12|unique:payments,number|regex:/^[0-9]*$/i',
+            'payment.expiration' => 'required|date|after_or_equal:'. now()->addMonth()->toDateTimeString(),
+            'payment.doc_type'   => 'required|in:C.C,C.E,PASSPORT',
+            'payment.document'   => 'required|max:15|min:8|regex:/^[0-9]*$/',
+        ];
+    }
+
     public function mount()
     {
         $this->productSlug = request()->route('product');
         $this->data        = request()->route('data');
     }
 
+    /**
+     * Validacion en tiempo real
+     */
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
 
+    /**
+     * Valida si se selecciono un 'payment' valido.
+     * Si si lo es, envia el id a otro componente livewire
+     */
     public function updatedSlPayment()
     {   
         $this->emit('showCheckout', null);
@@ -60,6 +70,7 @@ class UserPayments extends Component
         $this->emit('showCheckout', $this->slPayment);
     }
 
+    // Añade una tarjeta nueva 
     public function addPayment()
     {
         $this->validate();

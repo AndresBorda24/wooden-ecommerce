@@ -1,7 +1,7 @@
 <div class="w-full">
     @if ($payments->count())
         <div>
-            <h3 class="font-semibold text-xl">Selecciona tu Tajeta</h3>
+            <h3 class="font-semibold text-xl">Selecciona tu Tarjeta</h3>
             <p class="text-sm">Estas son tus tarjetas asociadas, selecciona una.</p>
 
             <x-jet-input-error for="slPayment" class="mt-2"/>
@@ -20,7 +20,6 @@
             </button>
         </div>
         <div class="divider"></div>
-        {{-- <div class="flex justify-center gap-3" --}}
     @else
         <p class="text-center">No hay tarjetas asociadas, registrala ahora!</p>
         <button class="btn btn-outline btn-success btn-sm block mx-auto my-3" wire:click="$set('openAdd', true)">
@@ -29,6 +28,7 @@
         <div class="divider"></div>
     @endif
 
+    {{-- Valida si el stock está disponible, muestra botones de acción --}}
     @livewire('checkout.checkout')
 
     {{-- Notificaciones  --}}
@@ -75,7 +75,7 @@
                     <div>
                         <x-jet-input-error for="payment.expiration" />
                         <x-jet-label value="Expiracion" />
-                        <input type="month" wire:model.lazy="payment.expiration"  class="input input-bordered w-full mb-3">
+                        <input type="month" wire:model.lazy="payment.expiration" min="{{ now()->addMonth()->format('Y-m') }}"  class="input input-bordered w-full mb-3">
                     </div>
                 </div>
 

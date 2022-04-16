@@ -22,6 +22,9 @@ class UserAddresses extends Component
         'address.*.*' => 'El campo es obligatorio'
     ];
 
+    /**
+     * Valida si la direccion seleccionada es valida
+     */
     public function updatedSlAddress()
     {
         $this->emit('selectedAddress');
@@ -30,21 +33,29 @@ class UserAddresses extends Component
             'slAddress' => 'required|numeric|exists:addresses,id'
         ], ['slAddress.*' => 'Debes seleccionar una direccion valida']);
 
+        // Evento a livewire/CreateOrder
         $this->emit('selectedAddress', $this->slAddress);
     }
 
+    // Añade una nueva direccion
     public function addAddress()
     {
         $this->validate();
         
-        \App\Models\Address::create([
-            'user_id' => auth()->id(),
-            'town'    => $this->address['town'],
-            'house'   => $this->address['house'],
-            'neighborhood'    => $this->address['neighborhood'],
-        ]);
+        try {
+            \App\Models\Address::create([
+                'user_id' => auth()->id(),
+                'town'    => $this->address['town'],
+                'house'   => $this->address['house'],
+                'neighborhood'    => $this->address['neighborhood'],
+            ]);
+    
+            $this->reset('openAdd', 'address');
+            $this->emit('nice', 'Direccion registrada correctamente!');
 
-        $this->reset('openAdd', 'address');
+        } catch (\Throwable $th) {
+            $this->emit('error', 'No se ha podidio resgistrar la direccion');
+        }
     }
 
     public function render()

@@ -13,10 +13,10 @@ class HomeController extends Controller
         $categories = \App\Models\Category::all();
         $wood       = Product::withCount('orders')
                         ->where('stock', '>', 0)
-                        ->orderby('orders_count', 'desc')
+                        ->orderBy('orders_count', 'desc')
                         ->first();
 
-        $lastReleased = Product::orderBy('created_at', 'desc')->first();
+        $lastReleased = Product::where('stock', '>', 0)->orderBy('created_at', 'desc')->first();
     
         return view('home', [
             'products'      => $products,

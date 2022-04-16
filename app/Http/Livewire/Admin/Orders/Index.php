@@ -14,7 +14,7 @@ class Index extends Component
     public $dateFrom;
 
     public $n = 0;
-    public $dir = 'desc';
+    public $dir = 'asc';
     public $openShow= false;
     public $onlyOrders = true;
     public $orderField = 'created_at';
@@ -35,14 +35,16 @@ class Index extends Component
         }
     }
 
+    // Selecciona un articulo de la coleccion dependiendo del index
     public function openDetails($index)
     {
         $this->n = $index;
         $this->openShow = true;
     }
 
-    public function sentOrder(Order $order) 
+    public function sentOrder($order) 
     {
+        $order = Order::withTrashed()->find($order);
         $this->openShow = false;
         try {
             if ($order->trashed()) {
@@ -59,7 +61,8 @@ class Index extends Component
 
     public function render()
     {
-        $orders = Order::query();
+        $this->n = 0;
+        $orders = Order::query()->whereHas('products');
 
         if (! $this->onlyOrders) {
             $orders->onlyTrashed();
